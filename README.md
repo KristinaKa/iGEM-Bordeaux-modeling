@@ -1,6 +1,8 @@
 # iGEM-Bordeaux-modeling
 
+<p align="center">
 <img src="http://savandara.besse.emi.u-bordeaux.fr/Wiki/img/iGEM_Bordeaux_logo_v2.png" height="300"/>
+</p>
 
 A computational simulation model allowing to predict the growth of transformed bacteria in a laboratory environment.
 
