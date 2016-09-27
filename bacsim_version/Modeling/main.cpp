@@ -1,6 +1,6 @@
 #include "lattice.hpp"
 #include "square.hpp"
-#include "bacteria.hpp"
+#include "bacterium.hpp"
 #include "constants.hpp"
 
 #include <iostream>
@@ -33,107 +33,85 @@ int main(int argc, char *argv[]){
     clock_t tStart = clock();
 
 	// Create a lattice  
-
 	Lattice lat1;
 
-	// Fill the lattice with square 
-
+	// Fill the lattice with squares 
 	lat1.fill_lattice();
 
-	std::vector<Bacteria*> bacteria_list;
+	// Array containing the different bacteria
+	std::vector<Bacterium*> bacteria_list;
 
 
-	/** Time parameters **/
+	// Array containing the different timesteps for the plotting
+	std::vector<float> t_values = arange(0,t,dt);
 
-	float t = 300; // simulation time in hours
-
-	std::vector<float> t_values = arange(0,t,dt); //an array containing the different timesteps for future plotting
-
+	// Array containing the different number of bacteria for the plotting
 	std::vector<int> nb_of_bacteria;
 
 	/** Initialization **/
 
-	int nb_bacteria = 100;
-	for (int i=0; i <nb_bacteria; i++){
-		lat1.add_bacteria(bacteria_list);
-	}
+	int nb_bacteria = INIT_BACT_NB;
+	for(int i=0; i<nb_bacteria; i++)
+		lat1.add_a_bacterium(bacteria_list);
+
 	/** Simulation runs **/
-	/* For now 5 */
 
+	for (int j = 0; j < t_values.size(); j++){
 
-  	for (int j = 0; j < t_values.size(); j++){
-  
-  		printf("\n tour number %d \n",j);
-  
-  		float dt = t_values[j];
-  
-  		/** a random number of bacteria are selected and their status is changed **/
-  		int nb_bact_checked = bacteria_list.size();  // for now 10, later maybe : rand() % bacteria_list.size();
-  
-  		for (int i = 0; i < nb_bact_checked ; i++){
-  
-  			if (bacteria_list.size()!=0){
-  				//int bact_id = get_uniform(0 , bacteria_list.size() - 1) ;
-  				//printf("ici la bacterie %d \n",bact_id);	
-  				bacteria_list[i]->uptake(lat1);
-  				bacteria_list[i]->metabolism_indisim(lat1);
-  				bacteria_list[i]->check_entering_division();
-  
-  				if (bacteria_list[i]->check_divide()==true){
-  				
-  					int new_square_id = bacteria_list[i]->divide_indisim(lat1);
-  					if (new_square_id>=0){
-  					
-  						lat1.add_bacteria_to_square_with_id(bacteria_list, new_square_id);
-  						bacteria_list[bacteria_list.size()-1]->set_dry_mass(bacteria_list[i]->get_dry_mass());
-  					
-  					}
-  				}
-  				bacteria_list[i]->update_time(dt);
-  				int level_id = bacteria_list[i]->get_level_id();
-  				printf("level id %d \n",level_id);
-  				printf(" On regarde si un square est libre pour bouger \n");
-  				int new_square = bacteria_list[i]->square_to_move_to(lat1);
-  				if (new_square >=0){
-  					
-  					printf("on peut bouger \n");
-  					
-  					Bacteria* pbact = bacteria_list[i];
-  					printf("on a recupere le pointeur vers bacterie \n");
-  					// on change le pointeur qui pointe vers la bacterie dans square.square_bacteria
-  					lat1.move_bacteria_to_square(pbact,new_square);
-  					printf("on a bouge \n");
-  						
-  
-  				}
-  
-  			}
-  		}
-  
-  		/** Adding the new bacteria number **/
-  		nb_of_bacteria.push_back(bacteria_list.size());
-  		//nb_of_bacteria.push_back(log1p(bacteria_list.size()-1));
-  
-  	}
+		float dt = t_values[j];
+
+		// a random number of bacteria are selected and their status is changed
+		int nb_bact_checked = 0.6*bacteria_list.size(); 
+
+		for (int i = 0; i < nb_bact_checked ; i++){
+
+			if (bacteria_list.size()!=0){
+				int bact_id = get_uniform(0 , bacteria_list.size() - 1) ;
+				printf("ici la bacterie %d \n",bact_id);	
+				bacteria_list[bact_id]->metabolism(dt, lat1);
+				bacteria_list[bact_id]->update_volume();
+				printf("taille %d \n",bacteria_list.size());
+
+				if (bacteria_list[bact_id]->can_divide()==true){
+					printf("Nous entrons dans la twilight zone de la division \n");		
+					int new_square_id = bacteria_list[bact_id]->divide(lat1);		
+					//printf("new square id pour division %d \n",new_square_id);
+					if (new_square_id>0){
+					
+						lat1.add_bacterium_to_square_with_id(bacteria_list, new_square_id);
+
+						printf("le nouveau square occupe, d'id  %d a %d bacterie \n",new_square_id,lat1[5].get_bacteria_list_length());		
+						printf("taille de bacteria_list %d \n",bacteria_list.size());			
+					}
+				}
+			
+				if (bacteria_list[bact_id]->has_to_die()==true){
+			
+					int square_id = bacteria_list[bact_id]->get_square_id();
+					printf("on va supprimer bacterie de  square_id %d \n",square_id);
+					//lat1[square_id]->delete_bacteria();	
+					printf("on a supprile la bacterie de son square \n");
+					//bacteria_list.erase(bacteria_list.begin() + bact_id);			
+					printf("on a supprime bacterie de bacteria_list \n");
+				}
+
+			}
+		}
+
+		// Adding the new bacteria number
+		nb_of_bacteria.push_back(bacteria_list.size());
+		//nb_of_bacteria.push_back(log1p(bacteria_list.size()-1));
+	}
+
 	printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
 	/** Plotting **/
 	// Vecteurs a plotter : t_values et nb_of_bacteria
 
-	//save("results.csv", t_values, nb_of_bacteria);
+	save("results.csv", t_values, nb_of_bacteria);
 
 	return 1;
 
-}
-
-void show_stats(std::vector<Bacteria*> bacteria_list, Lattice lattice){
-	//prints the different stats on the console
-	for(int i=0; i<bacteria_list.size(); i++){
-		bacteria_list[i]->show_bacteria_console();
-		//bacteria_list[i].show_bacteria_console();
-		int id = bacteria_list[i]->get_square_id(); 
-		//std::cout << lattice[id].get_substrate()<<"\n"; 
-	}
 }
 
 

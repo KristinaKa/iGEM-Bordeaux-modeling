@@ -1,7 +1,7 @@
 #ifndef __SQUARE_HPP__
 #define __SQUARE_HPP__
 
-#include "bacteria.hpp"
+#include "bacterium.hpp"
 
 #include <iostream>
 #include <string>
@@ -17,10 +17,7 @@
 
 #include <stdlib.h>
 
-#include <boost/random.hpp>
-#include <boost/random/normal_distribution.hpp>
-
-class Bacteria;
+class Bacterium;
 
 class Square{
 
@@ -29,8 +26,8 @@ class Square{
 		int id;
 		int full;
 		int height;
-		std::vector<Bacteria*> square_bacteria;
-		int last_used_stack;
+		std::vector<Bacterium*> square_bacteria;
+		int last_stack_level_used;
 
 
 	public:
@@ -38,7 +35,7 @@ class Square{
 		Square(int n,int i); //another constructor
 		~Square(); //Destructor
 
-		bool add_bacteria_to_square(std::vector<Bacteria*> &bacteria_list,int lat_length); //add one bacteria to the square_bacteria array
+		bool add_bacterium_to_square(std::vector<Bacterium*> &bacteria_list,int lat_length); //add one bacteria to the square_bacteria array
 		void reduce_substrate(float, float); //delete the substrate from the square when bacteria uptakes glucose
 		float get_rate_of_substrate_uptake();
 		float get_substrate();
@@ -46,11 +43,5 @@ class Square{
 	
 		int get_bacteria_list_length();
 		void delete_bacteria();
-
-		// INDISIM
-
-		void diminish_substrate(float U);
-		int get_stack_level();
-		void add_bacteria(Bacteria* ,int);
 };
 #endif

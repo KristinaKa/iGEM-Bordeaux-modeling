@@ -1,7 +1,6 @@
 #include "lattice.hpp"
 #include "square.hpp"
 #include "constants.hpp"
-
 #include <unistd.h>
 #include <fstream>
 
@@ -34,30 +33,23 @@ void Lattice::fill_lattice(){
 
 }
 
-void Lattice::add_bacteria(std::vector<Bacteria*> &bacteria_list){
+void Lattice::add_a_bacterium(std::vector<Bacterium*> &bacteria_list){
 	
-
+	
     int square_id = get_uniform(0, lattice_squares.size() - 1);
- 
-	
+		
 	while (1){
-			if (lattice_squares[square_id].add_bacteria_to_square(bacteria_list,LENGTH)==true){
+		if (lattice_squares[square_id].add_bacterium_to_square(bacteria_list,LENGTH)==true)
+			break;
+		square_id = rand() % lattice_squares.size();
+	}
 
-				break;
-			}
-			else{
-
-				square_id = get_uniform(0, lattice_squares.size() - 1);
-			}
-		}
-	
-	
 }
 
-void Lattice::add_bacteria_to_square_with_id(std::vector<Bacteria*> &bacteria_list,int new_square_id){
+void Lattice::add_bacterium_to_square_with_id(std::vector<Bacterium*> &bacteria_list,int new_square_id){
 	
 		
-	lattice_squares[new_square_id].add_bacteria_to_square(bacteria_list, LENGTH);	
+	lattice_squares[new_square_id].add_bacterium_to_square(bacteria_list, LENGTH);	
 }
 
 Square Lattice::operator [] (int id){
@@ -83,21 +75,4 @@ Square Lattice::get_square(int i)
 	return lattice_squares[i];
 }
 
-// INDISIM 
-
-void Lattice::move_bacteria_to_square(Bacteria* pbact,int new_square_id){
-
-	printf("on veut bouger au square %d \n",new_square_id);
-	int stack_level = lattice_squares[new_square_id].get_stack_level();
-
-	printf("ce square a un stack level de %d \n", stack_level);
-	
-	pbact->test();
-	//std::cout << std::typeof(pbact) << std::endl;
-	printf("\n");
-	lattice_squares[new_square_id].add_bacteria(pbact,stack_level);
-
-	printf("bacteria has moved to square %d \n",new_square_id);
-
-}
 

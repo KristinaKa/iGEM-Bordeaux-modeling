@@ -1,31 +1,34 @@
-#ifndef __CONSTANTS__
-#define __CONSTANTS__
+#ifndef __COSTANTS__
+#define __COSTANTS__
 
-const int LENGTH= 300; 
-const int HEIGHT= 300; 
+/** General model constants **/
 
-const int MAX_STACK_NB = 4;
+const float t = 3; // simulation time in hours
+const float dt = 0.1;
+const int INIT_BACT_NB= 50;
 
-//const double k = 0.5; //probability of nutriments actually being absorbed by bacteria during uptake
-const double k = 1; //probability of nutriments actually being absorbed by bacteria during uptake
-const double p = 1; // mass density (masse volumique)
-const double Y = 1; // metabolic efficiency (synthetized biomass per metabolized nutrients particles )
-const float I = 0.0070; // prescribed number of nutrient particles per unit of biomass or surface or both to maintain a minimum state of the bacteria
-const double tr = 41.9; // in minutes
-const double dt = 4.19; // minutes
+/** Lattice **/
 
-const double pmov = 0.5;
+const int LENGTH= 100; 
+const int HEIGHT= 100;
 
-const double Umax_mean = 315; 
-const double std_dev_Umax = 0.3;
-const float Mr_mean = 15000;
-const double std_dev_Mr = 0.4;
+/** Square **/
 
-const double mr_min = 5000;
+const float INIT_SUBSTRATE= 10000.0; //random number
+const int MAX_STACK_NB= 4;
 
+/** Bacteria **/
 
-// dmax 
-// Dmax
+const float MEDIAN_CELL_VOLUME= 0.4; //median cell volume at growth rate = 0, Bacsim reference
+const float MINIMAL_CELL_VOLUME= 0.1; //Bacsim reference
+const float VOLUME_AT_DIVISION= 0.5; //Bacsim reference (5 times the minimal cell volume)
+const float INIT_DRY_MASS= 290; //Bacsim
+const float INIT_VOLUME= 0.4; //Bacsim
+const float umax = 0.0205; 
+const float Ymax = 0.4444; 
+const float Vmax = umax/Ymax;
+const float Km = 2.34*pow(10,3);
+const float m = 6*pow(10,-4);
 
 
 #endif

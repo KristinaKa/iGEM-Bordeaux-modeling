@@ -1,12 +1,12 @@
 cc= g++ -g
 
-run : main.o square.o bacteria.o lattice.o
-	$(cc) main.o square.o bacteria.o lattice.o -o run
-square.o: square.hpp square.cpp bacteria.hpp
+run : main.o square.o bacterium.o lattice.o
+	$(cc) main.o square.o bacterium.o lattice.o -o run
+square.o: square.hpp square.cpp bacterium.hpp
 	$(cc) -c square.cpp
-bacteria.o: bacteria.hpp bacteria.cpp lattice.hpp 
-	$(cc) -c bacteria.cpp
-lattice.o: lattice.hpp lattice.cpp square.hpp bacteria.hpp
+bacterium.o: bacterium.hpp bacterium.cpp lattice.hpp 
+	$(cc) -c bacterium.cpp
+lattice.o: lattice.hpp lattice.cpp square.hpp bacterium.hpp
 	$(cc) -c lattice.cpp
 
 clean:
