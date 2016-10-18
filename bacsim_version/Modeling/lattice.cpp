@@ -14,6 +14,11 @@
 #include <random>
 #include <time.h> 
 
+#define DEBUG(x) std::cout << "DEBUG : " << x << "  - line : "<< __LINE__ << " - file : " << __FILE__ << std::endl;
+
+
+extern int LENGTH ;
+extern int HEIGHT;
 
 
 Lattice::Lattice(){}
@@ -23,11 +28,13 @@ Lattice::~Lattice(){}
 
 void Lattice::fill_lattice(){
 
-	for (int i=0; i < HEIGHT; i++){
-		for (int j=0; j< LENGTH; j++){
-			int square_id = j+i*LENGTH; 	
-			Square square(square_id,i); 
+	for (int row=0; row < HEIGHT; row++){
+		for (int column = 0; column < LENGTH; column++){
+		
+			int square_id = column+row*LENGTH; 	
+			Square square(square_id,row,column); 
 			lattice_squares.push_back(square);
+			lattice_squares[lattice_squares.size()-1].set_neighbor_square_ids();
 		}
 	}
 
@@ -35,44 +42,30 @@ void Lattice::fill_lattice(){
 
 void Lattice::add_a_bacterium(std::vector<Bacterium*> &bacteria_list){
 	
-	
-    int square_id = get_uniform(0, lattice_squares.size() - 1);
+    	int square_id = get_uniform(0, lattice_squares.size() - 1);
 		
 	while (1){
-		if (lattice_squares[square_id].add_bacterium_to_square(bacteria_list,LENGTH)==true)
+		if (lattice_squares[square_id].add_bacterium_to_square(bacteria_list,LENGTH)==true){
 			break;
-		square_id = rand() % lattice_squares.size();
+		}
+		square_id = get_uniform(0,lattice_squares.size());
 	}
 
 }
 
 void Lattice::add_bacterium_to_square_with_id(std::vector<Bacterium*> &bacteria_list,int new_square_id){
 	
-		
 	lattice_squares[new_square_id].add_bacterium_to_square(bacteria_list, LENGTH);	
+
 }
 
 Square Lattice::operator [] (int id){
   return lattice_squares[id];
 }
 
-int Lattice::get_height(){
-    return HEIGHT;
+
+void Lattice::delete_lat_bacteria(int square_id, int level){
+
+	lattice_squares[square_id].delete_bacteria(level);
+
 }
-
-int Lattice::get_length(){
-    return LENGTH;
-}
-
-
-int Lattice::get_lattice_squares_length(){
-
-	return lattice_squares.size();
-}
-
-Square Lattice::get_square(int i)
-{
-	return lattice_squares[i];
-}
-
-

@@ -1,23 +1,5 @@
-#ifndef __COSTANTS__
-#define __COSTANTS__
-
-/** General model constants **/
-
-const float t = 3; // simulation time in hours
-const float dt = 0.1;
-const int INIT_BACT_NB= 50;
-
-/** Lattice **/
-
-const int LENGTH= 100; 
-const int HEIGHT= 100;
-
-/** Square **/
-
-const float INIT_SUBSTRATE= 10000.0; //random number
-const int MAX_STACK_NB= 4;
-
-/** Bacteria **/
+#ifndef __CONSTANTS__
+#define __CONSTANTS__
 
 const float MEDIAN_CELL_VOLUME= 0.4; //median cell volume at growth rate = 0, Bacsim reference
 const float MINIMAL_CELL_VOLUME= 0.1; //Bacsim reference
